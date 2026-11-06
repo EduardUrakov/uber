@@ -349,10 +349,22 @@ a {
     left: 50%;
     bottom: 16px;
     transform: translateX(-50%);
+    z-index: 2;
+    padding: 8px 18px;
+    border: 1px solid var(--hairline);
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.04);
     color: var(--text-dim);
     font-size: 12px;
     letter-spacing: 0.08em;
-    z-index: 2;
+    text-decoration: none;
+    transition: border-color 0.2s, color 0.2s, background 0.2s;
+}
+
+.hero__scroll-hint:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: rgba(235, 255, 1, 0.06);
 }
 
 /* ============ Общие заголовки секций ============ */
