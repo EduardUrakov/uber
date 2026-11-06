@@ -65,7 +65,7 @@ function normalizeCar(obj) {
 }
 
 function loadCarModel(carHolder) {
-    return import('./GLTFLoader.js').then(({ GLTFLoader }) => new Promise((resolve) => {
+    return import('./loaders/GLTFLoader.js').then(({ GLTFLoader }) => new Promise((resolve) => {
         new GLTFLoader().load(
             MODEL_URL,
             (gltf) => {
@@ -85,7 +85,10 @@ function loadCarModel(carHolder) {
                 resolve(false);
             }
         );
-    }));
+    })).catch(() => {
+        carHolder.add(buildFallbackCar());
+        return false;
+    });
 }
 
 export function initCarScene(canvas, hero) {
