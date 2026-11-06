@@ -38,14 +38,16 @@ function buildFallbackCar() {
     return group;
 }
 
-// Реальная модель: каждый меш → тёмный корпус + лаймовые рёбра (каркас)
+// Реальная модель: каждый меш → тёмный корпус + полная сетка треугольников + силуэтные рёбра
 function toWireframe(root) {
     const solid = new THREE.MeshBasicMaterial({ color: BODY });
-    const line = new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.9 });
+    const tri = new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.22 });
+    const edge = new THREE.LineBasicMaterial({ color: ACCENT, transparent: true, opacity: 0.95 });
     root.traverse((o) => {
         if (o.isMesh) {
             o.material = solid;
-            o.add(new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry, 28), line));
+            o.add(new THREE.LineSegments(new THREE.WireframeGeometry(o.geometry), tri));
+            o.add(new THREE.LineSegments(new THREE.EdgesGeometry(o.geometry, 15), edge));
         }
     });
 }
