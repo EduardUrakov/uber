@@ -1,19 +1,14 @@
 const hero = document.querySelector('.hero');
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-function showFallback() {
-    hero.classList.add('hero--no3d');
-}
-
-if (reducedMotion) {
-    showFallback();
-} else {
-    import('./car.js')
-        .then(({ initCarScene }) => {
-            const canvas = document.getElementById('car-canvas');
-            if (!initCarScene(canvas, hero)) showFallback();
-        })
-        .catch(showFallback);
+// Лёгкий параллакс фона от курсора (только точные указатели, не при reduced-motion)
+if (!reducedMotion && window.matchMedia('(pointer: fine)').matches) {
+    window.addEventListener('pointermove', (e) => {
+        const x = (e.clientX / window.innerWidth - 0.5) * -14;
+        const y = (e.clientY / window.innerHeight - 0.5) * -10;
+        hero.style.setProperty('--px', x.toFixed(1) + 'px');
+        hero.style.setProperty('--py', y.toFixed(1) + 'px');
+    }, { passive: true });
 }
 
 // Мобильное меню
