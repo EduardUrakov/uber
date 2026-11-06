@@ -52,6 +52,7 @@ function toWireframe(root) {
 
 // Масштаб ~4.4 м по длине, центр в начале координат, колёса на полу
 function normalizeCar(obj) {
+    obj.position.set(0, 0, 0);
     let box = new THREE.Box3().setFromObject(obj);
     const size = new THREE.Vector3();
     box.getSize(size);
@@ -70,9 +71,13 @@ function loadCarModel(carHolder) {
             MODEL_URL,
             (gltf) => {
                 try {
-                    toWireframe(gltf.scene);
-                    normalizeCar(gltf.scene);
-                    carHolder.add(gltf.scene);
+                    const car = gltf.scene.getObjectByName('car_sports_striped')
+                        || gltf.scene.children.find((c) => c.name.startsWith('car_'));
+                    if (!car) throw new Error('car node missing');
+                    car.parent.remove(car); // остальной набор не рендерим
+                    toWireframe(car);
+                    normalizeCar(car);
+                    carHolder.add(car);
                     resolve(true);
                 } catch (err) {
                     carHolder.add(buildFallbackCar());
